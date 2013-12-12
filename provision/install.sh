@@ -1,4 +1,5 @@
 #!/bin/bash
+PROJECT_DIR=/home/vagrant/vps
 
 # Install essential packages from Apt
 apt-get update -y
@@ -19,7 +20,7 @@ function setLocales() {
 	export LANG=hu_HU.UTF-8
 }
 
-function installPostgresql() {
+function installPostgresqlForRedmine() {
 	apt-get install -y postgresql postgresql-client
 	su - postgres -c "echo \"CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'redmine' NOINHERIT VALID UNTIL 'infinity'; CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;\" | psql"
 }
@@ -80,22 +81,22 @@ function installPython() {
 	apt-get install -y build-essential python python-dev python-setuptools python-pip
 	wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | python
 
-	PROJECT_DIR=/home/vagrant/vps
-
-	PGSQL_VERSION=9.1
-
-	# Postgresql
-	if ! command -v psql; then
-		apt-get install -y postgresql-$PGSQL_VERSION libpq-devcp $PROJECT_DIR/provision/pg_hba.conf /etc/postgresql/$PGSQL_VERSIONN/main/
-		/etc/init.d/postgresql reload
-	fi
 
 	# Install pip
 	if ! command -v pip; then
 		easy_install -U pip
 	fi
-		
+}
+
+function installPostgresqlForTrac() {
+	PGSQL_VERSION=9.1
+	if ! command -v psql; then
+		apt-get install -y postgresql-$PGSQL_VERSION libpq-devcp $PROJECT_DIR/provision/pg_hba.conf /etc/postgresql/$PGSQL_VERSIONN/main/
+		/etc/init.d/postgresql reload
+	fi
+
 	createdb -Upostgres trac
 }
 
 installPython
+installPostgresqlForTrac

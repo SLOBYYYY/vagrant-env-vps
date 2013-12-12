@@ -11,7 +11,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.synced_folder ".", "/home/vagrant/vps"
 
-  config.vm.provision :shell, :path => "install.sh"
+  config.vm.provision :shell, :path => "provision/install.sh"
 
   # For resolv.conf to resolve hosts while sending emails
   config.vm.provider "virtualbox" do |v|
