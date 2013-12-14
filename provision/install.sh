@@ -17,10 +17,9 @@ function installLocales() {
 }
 
 #source ./install-sources/smtp.sh
-#source ./install-sources/svn.sh
 #source ./install-sources/jenkins.sh
 
+source $PROJECT_DIR/provision/install-sources/svn.sh $PROJECT_DIR $PROJECT_NAME
 source $PROJECT_DIR/provision/install-sources/trac.sh $PROJECT_DIR $PROJECT_NAME
 
 installLocales
-installTrac
